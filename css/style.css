@@ -1,5 +1,41 @@
 * {
 	box-sizing: border-box;
-	background-color: green;
+	background-color: #a92f92;
 	color: white;
+    margin: 10px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+h1 {
+    font-size: 48px;
+    justify-self: center;
+    margin: 0;
+}
+
+#game-window {
+    justify-self: center;
+    display: flex;
+    color: black;
+    background-color: #f2bce9;
+    width: 80%;
+    height: 200px;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+#dice-tray {
+    justify-self: center;
+    display: flex;
+    color: black;
+    background-color: #f2bce9;
+    width: 80%;
+    height: 150px;
+    border-radius: 5px;
+    padding: 8px;
 }
