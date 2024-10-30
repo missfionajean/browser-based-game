@@ -44,6 +44,20 @@ Point Calculation:
 -Maybe FUNNY, CLEVER and SWEET
 */
 
+// I wanted to event bubble the dice cache, but this was way easier
+const die1 = document.querySelector("#d1");
+const die2 = document.querySelector("#d2");
+const die3 = document.querySelector("#d3");
+const die4 = document.querySelector("#d4");
+const die5 = document.querySelector("#d5");
+
+// caches lock button bar to make them interactive
+const lockButtons = document.querySelector("#lock-buttons");
+
+// cached elements for action buttons
+const rollButton = document.querySelector("#ab1");
+const commitButton = document.querySelector("#ab2");
+
 // defining current URL path for proper image finding
 const currentURL = window.location.href;
 
@@ -78,41 +92,30 @@ Sweet -> dieFaces[2]
 Swoon -> dieFaces[3]
 */
 
-// array that lets us iterate past locked dice when rolling
-const lockStates = ["unlocked", "unlocked", "unlocked", "unlocked", "unlocked"];
-
-// array for storing final roll values during dice commit
-const finalRoll = ["none", "none", "none", "none", "none"];
-
-// I wanted to event bubble the dice cache, but this was way easier
-const die1 = document.querySelector("#d1");
-const die2 = document.querySelector("#d2");
-const die3 = document.querySelector("#d3");
-const die4 = document.querySelector("#d4");
-const die5 = document.querySelector("#d5");
-
 // array of each cached die element for use later
 const allDice = [die1, die2, die3, die4, die5];
 
-// caches lock button bar to make them interactive
-const lockButtons = document.querySelector("#lock-buttons");
+// array that lets us iterate past locked dice when rolling
+let lockStates = ["unlocked", "unlocked", "unlocked", "unlocked", "unlocked"];
 
-// cached elements for action buttons
-const rollButton = document.querySelector("#ab1");
-const commitButton = document.querySelector("#ab2");
+// array for storing final roll values during dice commit
+let finalRoll = ["none", "none", "none", "none", "none"];
+
+// variable for tracking roll attempts in rollDice() function
+let rollsLeft = 3;
 
 // function to  dynamically switch current face to locked and back
 // args -> (ref'd image URL, which die in action window, html Id)
 const switchFace = (faceImg, dieNumber, trayIndex) => {
 	// for loop to find the correct object in dieFaces array
-	for (die of dieFaces) {
-		if (die.locked === faceImg) {
-			dieNumber.src = die.unlocked;
+	for (face of dieFaces) {
+		if (face.locked === faceImg) {
+			dieNumber.src = face.unlocked;
 			// swaps the state in lockStates array
 			lockStates[trayIndex] = "unlocked";
 			break;
-		} else if (die.unlocked === faceImg) {
-			dieNumber.src = die.locked;
+		} else if (face.unlocked === faceImg) {
+			dieNumber.src = face.locked;
 			lockStates[trayIndex] = "locked";
 			break;
 		}
@@ -130,7 +133,6 @@ const lockUnlock = (lockState) => {
 
 // function for applying switchFace() function to lock buttons
 const lockDie = (event) => {
-	console.log(event);
 	switch (event.target.id) {
 		case "lb1":
 			event.target.innerText = lockUnlock(event.target.innerText);
@@ -155,15 +157,12 @@ const lockDie = (event) => {
 	}
 };
 
-// rolls individual die in rollDice step (animation + random face)
+// rolls individual die in rollDice step (grabs/applies random face)
 const rollDie = (whichDie) => {
 	// Source: https://stackoverflow.com/questions/5915096/
 	whichDie.src =
 		dieFaces[Math.floor(Math.random() * dieFaces.length)].unlocked;
 };
-
-// variable for tracking roll attempts (remmeber to reset later)
-let rollsLeft = 3;
 
 // function for rolling unlocked dice (contains rollDie function)
 const rollDice = () => {
@@ -181,7 +180,37 @@ const rollDice = () => {
 	// adds back button listeners after one roll (remove them after pressing commit button, so you can't roll during interim)
 	commitButton.innerText = "Make your move! (Commit Dice)";
 	lockButtons.addEventListener("click", lockDie);
-	commitButton.addEventListener("click", commitDice);
+	commitButton.addEventListener("click", resetActionWindow);
+};
+
+// function for restoring default values to action window
+const resetActionWindow = () => {
+	// for loop that resets lock buttons to og state
+	for (lb of ["lb1", "lb2", "lb3", "lb4", "lb5"]) {
+		document.getElementById(lb).innerText = "Lock";
+	}
+
+	// resets variables used in dice rolling to og states
+	lockStates = ["unlocked", "unlocked", "unlocked", "unlocked", "unlocked"];
+	finalRoll = ["none", "none", "none", "none", "none"];
+	rollsLeft = 3;
+
+	// resets dice tray images back to og unlocked state
+	for (die of allDice) {
+		for (face of dieFaces) {
+			if (face.locked === die.src) {
+				die.src = face.unlocked;
+			}
+		}
+	}
+
+	// resets text of action buttons to og state
+	rollButton.innerText = "Roll the dice! (3 Remaining)";
+	commitButton.innerText = "Make your move! (Must Roll First)";
+
+	// removes lock & commit functionailty until next roll is made
+	lockButtons.removeEventListener("click", lockDie);
+	commitButton.removeEventListener("click", resetActionWindow);
 };
 
 // function for committing the dice and scoring the roll
