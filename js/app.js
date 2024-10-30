@@ -78,6 +78,15 @@ Sweet -> dieFaces[2]
 Swoon -> dieFaces[3]
 */
 
+// array that lets us iterate past locked dice when rolling
+const lockStates = ["unlocked", "unlocked", "unlocked", "unlocked", "unlocked"];
+
+// general array of the dice elements, if needed anywhere
+const allDice = [die1, die2, die3, die4, die5];
+
+// array for storing final roll values during dice commit
+const finalRoll = ['none', 'none', 'none', 'none', 'none']
+
 // I wanted to event bubble the dice cache, but this was way easier
 const die1 = document.querySelector("#d1");
 const die2 = document.querySelector("#d2");
@@ -88,16 +97,23 @@ const die5 = document.querySelector("#d5");
 // caches lock button bar to make them interactive
 const lockButtons = document.querySelector("#lock-buttons");
 
+// cached elements for action buttons
+const rollButton = document.querySelector("ab1");
+const commitButton = document.querySelector("ab2");
+
 // function to  dynamically switch current face to locked and back
 // args -> (ref'd image URL, which die in action window, html Id)
-const switchFace = (faceImg, dieNumber) => {
+const switchFace = (faceImg, dieNumber, trayIndex) => {
 	// for loop to find the correct object in dieFaces array
 	for (die of dieFaces) {
 		if (die.locked === faceImg) {
 			dieNumber.src = die.unlocked;
+			// swaps the state in lockStates array
+			lockStates[trayIndex] = "unlocked";
 			break;
 		} else if (die.unlocked === faceImg) {
 			dieNumber.src = die.locked;
+			lockStates[trayIndex] = "locked";
 			break;
 		}
 	}
@@ -117,25 +133,47 @@ const lockDie = (event) => {
 	switch (event.target.id) {
 		case "lb1":
 			event.target.innerText = lockUnlock(event.target.innerText);
-			switchFace(die1.src, die1);
+			switchFace(die1.src, die1, 0);
 			break;
 		case "lb2":
 			event.target.innerText = lockUnlock(event.target.innerText);
-			switchFace(die2.src, die2);
+			switchFace(die2.src, die2, 1);
 			break;
 		case "lb3":
 			event.target.innerText = lockUnlock(event.target.innerText);
-			switchFace(die3.src, die3);
+			switchFace(die3.src, die3, 2);
 			break;
 		case "lb4":
 			event.target.innerText = lockUnlock(event.target.innerText);
-			switchFace(die4.src, die4);
+			switchFace(die4.src, die4, 3);
 			break;
 		case "lb5":
 			event.target.innerText = lockUnlock(event.target.innerText);
-			switchFace(die5.src, die5);
+			switchFace(die5.src, die5, 4);
 			break;
 	}
 };
 
+// rolls individual die in rollDice step (animation + random face)
+/* const rollDie = () => {}; */
+
+// function for rolling unlocked dice (contains rollDie func)
+const rollDice = () => {
+	let currentIndex = 0;
+	for (state of lockStates) {
+		if (state === "unlocked") {
+			rollDice(allDice[currentIndex])
+		}
+		currentIndex++;
+	}
+};
+
+// function for committing the dice and scoring the roll
+/* const commitDice = () => {}; */
+
+// event listeners for action window
+rollButton.addEventListener("click", rollDice);
+/* commitButton.addEventListener("click", commitDice); */
 lockButtons.addEventListener("click", lockDie);
+
+// will need to add functionality that prevents committing unrolled dice - can be handled with a simple var and if statement, maybe removing and adding event listeners?
