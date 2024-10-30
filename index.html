@@ -1,15 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css">
-    <script defer src="./js/app.js"></script>
-    <title>Browser Game</title>
-</head>
-<body>
-    <h1>Swoon!</h1>
-    <div id="game-window">This is a flexbox where the date info and choices go!</div>
-    <di id="dice-tray"></div>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="./css/style.css" />
+		<script defer src="./js/app.js"></script>
+		<title>Swoon!</title>
+	</head>
+	<body>
+		<h1 class="heading">Swoon !</h1>
+		<p class="heading">
+			Roll the dice on love...
+			<img
+				src="images/heart-icon-white.png"
+				alt="Swoon"
+				width="25px"
+				height="25px"
+			/>
+		</p>
+
+		<div id="game-window">
+			<p>
+				Welcome to Swoon! The game where love is just a roll of the dice away.
+                <br><br>
+                Are you ready to take a chance and meet the one?
+                <br><br>
+                Click "Next" to create your Swoon!<span id="tm">TM</span> profile and get rolling on the road to romance!
+			</p>
+            <button>Next</button>
+		</div>
+		<div id="action-window">
+			<div id="dice-tray">
+				<img
+					src="images/rose-die.png"
+					alt="Sweet"
+					width="100px"
+					height="100px"
+					class="die"
+					id="d1"
+				/>
+				<img
+					src="images/laugh-die.png"
+					alt="Funny"
+					width="100px"
+					height="100px"
+					class="die"
+					id="d2"
+				/>
+				<img
+					src="images/brain-die.png"
+					alt="Clever"
+					width="100px"
+					height="100px"
+					class="die"
+					id="d3"
+				/>
+				<img
+					src="images/heart-die.png"
+					alt="Swoon"
+					width="100px"
+					height="100px"
+					class="die"
+					id="d4"
+				/>
+				<img
+					src="images/heart-die.png"
+					alt="Swoon"
+					width="100px"
+					height="100px"
+					class="die"
+					id="d5"
+				/>
+			</div>
+			<div id="lock-buttons">
+				<button id="lb1">Lock</button>
+				<button id="lb2">Lock</button>
+				<button id="lb3">Lock</button>
+				<button id="lb4">Lock</button>
+				<button id="lb5">Lock</button>
+			</div>
+			<div id="action-buttons">
+				<button id="ab1">Roll the dice! (3 Remaining)</button>
+				<button id="ab2">Make your move! (Commit Dice)</button>
+			</div>
+		</div>
+	</body>
 </html>

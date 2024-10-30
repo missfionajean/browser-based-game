@@ -1,5 +1,4 @@
-/* 
-PSEUDOCODE
+/* PSEUDOCODE
 
 Use one of your board game ideas?
 
@@ -44,3 +43,96 @@ Point Calculation:
 -Situation Bonus - Each date event will have a choice based on the event, with some making slightly more sense than others (awarding a small flat bonus to your post-multiplier score) [NOT SURE ABOUT THIS ONE]
 -Maybe FUNNY, CLEVER and SWEET
 */
+
+// defining current URL path for proper image finding
+const currentURL = window.location.href;
+
+// defining array for all die faces to ease switching; each is an object with locked and unlocked properties
+const dieFaces = [
+	{
+		type: "Funny",
+		locked: currentURL + "images/laugh-die-locked.png",
+		unlocked: currentURL + "images/laugh-die.png",
+	},
+	{
+		type: "Clever",
+		locked: currentURL + "images/brain-die-locked.png",
+		unlocked: currentURL + "images/brain-die.png",
+	},
+	{
+		type: "Sweet",
+		locked: currentURL + "images/rose-die-locked.png",
+		unlocked: currentURL + "images/rose-die.png",
+	},
+	{
+		type: "Swoon",
+		locked: currentURL + "images/heart-die-locked.png",
+		unlocked: currentURL + "images/heart-die.png",
+	},
+];
+
+/* dieFaces Array Key
+Funny -> dieFaces[0]
+Clever -> dieFaces[1]
+Sweet -> dieFaces[2]
+Swoon -> dieFaces[3]
+*/
+
+const die1 = document.querySelector("#d1");
+const die2 = document.querySelector("#d2");
+const die3 = document.querySelector("#d3");
+const die4 = document.querySelector("#d4");
+const die5 = document.querySelector("#d5");
+const lockButtons = document.querySelector("#lock-buttons");
+
+// function to  dynamically switch current face to locked and back
+// args -> (ref'd image URL, which die in action window, html Id)
+const switchFace = (faceImg, dieNumber, dieId) => {
+	// for loop to find the correct object in dieFaces array
+	for (die of dieFaces) {
+		if (die.locked === faceImg) {
+			dieNumber.src = die.unlocked;
+			break;
+		} else if (die.unlocked === faceImg) {
+			dieNumber.src = die.locked;
+			break;
+		}
+	}
+};
+
+// function for elegant handling of dynamic lock button text
+const lockUnlock = (lockState) => {
+	if (lockState === "Lock") {
+		return "Unlock";
+	} else {
+		return "Lock";
+	}
+};
+
+// function for applying switchFace() function to lock buttons
+const lockDie = (event) => {
+	switch (event.target.id) {
+		case "lb1":
+			event.target.innerText = lockUnlock(event.target.innerText);
+			switchFace(die1.src, die1, "d1");
+			break;
+		case "lb2":
+			event.target.innerText = lockUnlock(event.target.innerText);
+			switchFace(die2.src, die2, "d2");
+			break;
+		case "lb3":
+			event.target.innerText = lockUnlock(event.target.innerText);
+			switchFace(die3.src, die3, "d3");
+			break;
+		case "lb4":
+			event.target.innerText = lockUnlock(event.target.innerText);
+			switchFace(die4.src, die4, "d4");
+			break;
+		case "lb5":
+			event.target.innerText = lockUnlock(event.target.innerText);
+			switchFace(die5.src, die5, "d5");
+			break;
+	}
+};
+
+lockButtons.addEventListener("click", lockDie);
