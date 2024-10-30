@@ -81,11 +81,8 @@ Swoon -> dieFaces[3]
 // array that lets us iterate past locked dice when rolling
 const lockStates = ["unlocked", "unlocked", "unlocked", "unlocked", "unlocked"];
 
-// general array of the dice elements, if needed anywhere
-const allDice = [die1, die2, die3, die4, die5];
-
 // array for storing final roll values during dice commit
-const finalRoll = ['none', 'none', 'none', 'none', 'none']
+const finalRoll = ["none", "none", "none", "none", "none"];
 
 // I wanted to event bubble the dice cache, but this was way easier
 const die1 = document.querySelector("#d1");
@@ -94,12 +91,15 @@ const die3 = document.querySelector("#d3");
 const die4 = document.querySelector("#d4");
 const die5 = document.querySelector("#d5");
 
+// array of each cached die element for use later
+const allDice = [die1, die2, die3, die4, die5];
+
 // caches lock button bar to make them interactive
 const lockButtons = document.querySelector("#lock-buttons");
 
 // cached elements for action buttons
-const rollButton = document.querySelector("ab1");
-const commitButton = document.querySelector("ab2");
+const rollButton = document.querySelector("#ab1");
+const commitButton = document.querySelector("#ab2");
 
 // function to  dynamically switch current face to locked and back
 // args -> (ref'd image URL, which die in action window, html Id)
@@ -130,6 +130,7 @@ const lockUnlock = (lockState) => {
 
 // function for applying switchFace() function to lock buttons
 const lockDie = (event) => {
+	console.log(event);
 	switch (event.target.id) {
 		case "lb1":
 			event.target.innerText = lockUnlock(event.target.innerText);
@@ -155,25 +156,36 @@ const lockDie = (event) => {
 };
 
 // rolls individual die in rollDice step (animation + random face)
-/* const rollDie = () => {}; */
+const rollDie = (whichDie) => {
+	// Source: https://stackoverflow.com/questions/5915096/
+	whichDie.src =
+		dieFaces[Math.floor(Math.random() * dieFaces.length)].unlocked;
+};
 
-// function for rolling unlocked dice (contains rollDie func)
+// variable for tracking roll attempts (remmeber to reset later)
+let rollsLeft = 3;
+
+// function for rolling unlocked dice (contains rollDie function)
 const rollDice = () => {
-	let currentIndex = 0;
-	for (state of lockStates) {
-		if (state === "unlocked") {
-			rollDice(allDice[currentIndex])
+	if (rollsLeft > 0) {
+		let currentIndex = 0;
+		for (state of lockStates) {
+			if (state === "unlocked") {
+				rollDie(allDice[currentIndex]);
+			}
+			currentIndex++;
 		}
-		currentIndex++;
+		rollsLeft--;
+		rollButton.innerText = `Roll the dice! (${rollsLeft} Remaining)`;
 	}
+	// adds back button listeners after one roll (remove them after pressing commit button, so you can't roll during interim)
+	commitButton.innerText = "Make your move! (Commit Dice)";
+	lockButtons.addEventListener("click", lockDie);
+	commitButton.addEventListener("click", commitDice);
 };
 
 // function for committing the dice and scoring the roll
-/* const commitDice = () => {}; */
+/* const commitDice = () => {} */
 
 // event listeners for action window
 rollButton.addEventListener("click", rollDice);
-/* commitButton.addEventListener("click", commitDice); */
-lockButtons.addEventListener("click", lockDie);
-
-// will need to add functionality that prevents committing unrolled dice - can be handled with a simple var and if statement, maybe removing and adding event listeners?

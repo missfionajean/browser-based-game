@@ -24,7 +24,7 @@ h1.heading {
 }
 
 p.heading {
-	font-size: 20px;
+	font-size: 18px;
 	justify-self: center;
 	padding: 0;
 	display: flex;
@@ -46,20 +46,20 @@ button:hover {
 	align-content: space-between;
 	background-color: #f2bce9;
 	width: 675px;
-	height: 250px;
+	height: 240px;
 	border-radius: 5px;
 	padding: 8px;
-    border: 1px solid red;
 }
 
 #game-window p {
+	font-size: 16px;
 	color: black;
 	background-color: inherit;
 }
 
 #game-window button {
-	width: 200px;
-	height: 40px;
+	width: 150px;
+	height: 35px;
     align-self: flex-end;
 	border-radius: 3px;
 }
@@ -81,7 +81,7 @@ button:hover {
 	color: black;
 	background-color: #f2bce9;
 	width: 675px;
-	height: 260px;
+	height: 250px;
 	border-radius: 5px;
 }
 
