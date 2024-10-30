@@ -78,16 +78,19 @@ Sweet -> dieFaces[2]
 Swoon -> dieFaces[3]
 */
 
+// I wanted to event bubble the dice cache, but this was way easier
 const die1 = document.querySelector("#d1");
 const die2 = document.querySelector("#d2");
 const die3 = document.querySelector("#d3");
 const die4 = document.querySelector("#d4");
 const die5 = document.querySelector("#d5");
+
+// caches lock button bar to make them interactive
 const lockButtons = document.querySelector("#lock-buttons");
 
 // function to  dynamically switch current face to locked and back
 // args -> (ref'd image URL, which die in action window, html Id)
-const switchFace = (faceImg, dieNumber, dieId) => {
+const switchFace = (faceImg, dieNumber) => {
 	// for loop to find the correct object in dieFaces array
 	for (die of dieFaces) {
 		if (die.locked === faceImg) {
@@ -114,23 +117,23 @@ const lockDie = (event) => {
 	switch (event.target.id) {
 		case "lb1":
 			event.target.innerText = lockUnlock(event.target.innerText);
-			switchFace(die1.src, die1, "d1");
+			switchFace(die1.src, die1);
 			break;
 		case "lb2":
 			event.target.innerText = lockUnlock(event.target.innerText);
-			switchFace(die2.src, die2, "d2");
+			switchFace(die2.src, die2);
 			break;
 		case "lb3":
 			event.target.innerText = lockUnlock(event.target.innerText);
-			switchFace(die3.src, die3, "d3");
+			switchFace(die3.src, die3);
 			break;
 		case "lb4":
 			event.target.innerText = lockUnlock(event.target.innerText);
-			switchFace(die4.src, die4, "d4");
+			switchFace(die4.src, die4);
 			break;
 		case "lb5":
 			event.target.innerText = lockUnlock(event.target.innerText);
-			switchFace(die5.src, die5, "d5");
+			switchFace(die5.src, die5);
 			break;
 	}
 };
