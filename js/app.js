@@ -189,3 +189,5 @@ const rollDice = () => {
 
 // event listeners for action window
 rollButton.addEventListener("click", rollDice);
+
+/* BIG NEED: A way to reset everything to normal at the end of a finished roll attempt. */
