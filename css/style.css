@@ -138,11 +138,10 @@ button:hover {
 #terms {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
 	align-content: space-between;
 	background-color: #f2bce9;
 	width: 675px;
-	height: 700px;
+	height: 755px;
 	border-radius: 5px;
 	padding: 8px;
 }
@@ -160,8 +159,17 @@ button:hover {
 
 #symbol-guide {
 	background-color: inherit;
+	margin: 0;
+	padding: 0;
 }
 
 .symbol-rule {
 	background: inherit;
+	display: flex;
+	align-items: center;
+	margin: 0;
+}
+
+footer {
+	font-size: 14px;
 }
