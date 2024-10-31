@@ -132,9 +132,22 @@ button:hover {
 	background-color: #db48bf;
 	border: 3px solid #a92f92;
 	border-radius: 6px;
-	width: 320px;
 	height: 40px;
 	padding-inline: 10px;
+}
+
+#mood {
+	width: 305px;
+}
+
+#swoon { 
+	width: 340px;
+}
+
+#meter-heart {
+	width: 20px;
+	margin: 0 0 0 5px;
+	background-color: inherit;
 }
 
 #action-window {

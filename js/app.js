@@ -56,8 +56,9 @@ const storyButtons = document.querySelector("#choices");
 // to manipluate content and display of three reactions
 const eventReactions = document.querySelector("#reaction-box");
 
-// cached meter window (between game and action windows)
-const meterBox = document.querySelector("#meter-window");
+// cached meter elements (between game and action windows)
+const moodMeter = document.querySelector("#mood");
+const swoonMeter = document.querySelector("#swoon");
 
 // I wanted to event bubble the dice cache, but this was way easier
 const die1 = document.querySelector("#d1");
@@ -124,7 +125,8 @@ let finalRoll = ["none", "none", "none", "none", "none"];
 let rollsLeft = 3;
 
 // for mood and swoon-o-meter tracking (out of seven for now)
-let mood = 0
+let moodLevel = 0;
+let swoonLevel = 0;
 
 /* ----------------------------------------------------------- */
 /* ------------------------ Functions ------------------------ */
@@ -243,8 +245,19 @@ const resetActionWindow = () => {
 
 // function to add hearts to either date mood or swoon-o-meter
 // class "meter" id "mood" "swoon" (both have a max of seven hearts) - when they're added can be done later, this is just adding a literl heart graphic to the box
-const addHeart = () => {
-
+const addHeart = (meterElement, heartLevel) => {
+	if (heartLevel < 7) {
+		// creates meter heart element, adds src/id, appends to meter
+		const heartIcon = document.createElement("img");
+		heartIcon.src = "images/heart-icon-white.png";
+		heartIcon.id = "meter-heart";
+		meterElement.appendChild(heartIcon);
+		if (meterElement === moodMeter) {
+			moodLevel++
+		} else if (meterElement === swoonMeter) {
+			swoonLevel++
+		}
+	}
 };
 
 // function for committing the dice and scoring the roll
@@ -252,10 +265,46 @@ const addHeart = () => {
 /* const commitDice = () => {} */
 
 // function to advance the scene
+const advanceScene = () => {};
 
 /* ----------------------------------------------------------- */
-/* ---------------- Un-Nested Event Listeners ---------------- */
+/* ------- Un-Nested Event Listeners & Called Functions ------ */
 /* ----------------------------------------------------------- */
 
 // event listeners for action window
 rollButton.addEventListener("click", rollDice);
+
+// heart adding test cases
+addHeart(moodMeter, moodLevel);
+console.log(moodLevel);
+addHeart(moodMeter, moodLevel);
+console.log(moodLevel);
+addHeart(moodMeter, moodLevel);
+console.log(moodLevel);
+addHeart(moodMeter, moodLevel);
+console.log(moodLevel);
+addHeart(moodMeter, moodLevel);
+console.log(moodLevel);
+addHeart(moodMeter, moodLevel);
+console.log(moodLevel);
+addHeart(moodMeter, moodLevel);
+console.log(moodLevel);
+addHeart(moodMeter, moodLevel);
+console.log(moodLevel);
+
+addHeart(swoonMeter, swoonLevel);
+console.log(swoonLevel);
+addHeart(swoonMeter, swoonLevel);
+console.log(swoonLevel);
+addHeart(swoonMeter, swoonLevel);
+console.log(swoonLevel);
+addHeart(swoonMeter, swoonLevel);
+console.log(swoonLevel);
+addHeart(swoonMeter, swoonLevel);
+console.log(swoonLevel);
+addHeart(swoonMeter, swoonLevel);
+console.log(swoonLevel);
+addHeart(swoonMeter, swoonLevel);
+console.log(swoonLevel);
+addHeart(swoonMeter, swoonLevel);
+console.log(swoonLevel);
