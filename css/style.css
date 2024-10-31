@@ -33,6 +33,10 @@ p.heading {
 	color: white;
 }
 
+button {
+	font-weight: 450;
+}
+
 button:hover {
 	background-color: #962481;
 	cursor: url("/images/heart-cursor.png"), pointer;
@@ -45,10 +49,10 @@ button:hover {
 	align-content: space-between;
 	background-color: #f2bce9;
 	width: 675px;
-	height: 300px;
+	height: 320px;
 	border-radius: 5px;
 	padding: 8px;
-	margin-top: 25px;
+	margin-top: 15px;
 }
 
 #game-window p {
@@ -65,7 +69,7 @@ button:hover {
 
 #game-window button {
 	width: 150px;
-	height: 35px;
+	height: 40px;
 	border-radius: 3px;
 }
 
@@ -75,6 +79,50 @@ button:hover {
 	vertical-align: super;
 	margin: 2px;
 	background-color: inherit;
+}
+
+#reaction-box {
+	display: none; /* change to flex to reappear */
+	flex-direction: column;
+	align-items: flex-start;
+	background-color: inherit;
+	width: 650px;
+	margin: 0;
+}
+
+.reaction {
+	display: flex;
+	justify-content: flex-start;
+	background-color: inherit;
+}
+
+.reaction img {
+	width: 25px;
+	height: 25px;
+	background-color: inherit;
+}
+
+#meter-window {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #f2bce9;
+	width: 675px;
+	height: 62px;
+	border-radius: 5px;
+}
+
+.meter {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	background-color: #db48bf;
+	border: 3px solid #a92f92;
+	border-radius: 6px;
+	width: 320px;
+	height: 40px;
+	padding-inline: 10px;
 }
 
 #action-window {
@@ -87,7 +135,6 @@ button:hover {
 	width: 675px;
 	height: 240px;
 	border-radius: 5px;
-	margin-top: 25px;
 }
 
 #dice-tray {
