@@ -63,8 +63,20 @@ button:hover {
 
 #choices {
 	background-color: inherit;
-	display: flex;
+	display: flex; /* change to none to hide */
 	justify-content: flex-end;
+}
+
+#ch1 {
+	display: block; /* default "next", change to none to hide */
+}
+
+#ch2 {
+	display: none; /* empty for now, use ch1 until you need */
+}
+
+#ch3 {
+	display: none; /* empty for now, use ch1 until you need */
 }
 
 #game-window button {

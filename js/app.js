@@ -44,10 +44,20 @@ Point Calculation:
 -Maybe FUNNY, CLEVER and SWEET
 */
 
+/* ----------------------------------------------------------- */
+/* ---------------------- Cached Elements -------------------- */
+/* ----------------------------------------------------------- */
+
 // cached elements for main game window (upper box)
 const gameWindow = document.querySelector("#game-window");
 const storyPrompt = document.querySelector("#prompt");
 const storyButtons = document.querySelector("#choices");
+
+// to manipluate content and display of three reactions
+const eventReactions = document.querySelector("#reaction-box");
+
+// cached meter window (between game and action windows)
+const meterBox = document.querySelector("#meter-window");
 
 // I wanted to event bubble the dice cache, but this was way easier
 const die1 = document.querySelector("#d1");
@@ -62,6 +72,10 @@ const lockButtons = document.querySelector("#lock-buttons");
 // cached elements for action buttons
 const rollButton = document.querySelector("#ab1");
 const commitButton = document.querySelector("#ab2");
+
+/* ----------------------------------------------------------- */
+/* -------------------- Arrays & Variables ------------------- */
+/* ----------------------------------------------------------- */
 
 // defining current URL path for proper image finding
 const currentURL = window.location.href;
@@ -108,6 +122,13 @@ let finalRoll = ["none", "none", "none", "none", "none"];
 
 // variable for tracking roll attempts in rollDice() function
 let rollsLeft = 3;
+
+// for mood and swoon-o-meter tracking (out of seven for now)
+let mood = 0
+
+/* ----------------------------------------------------------- */
+/* ------------------------ Functions ------------------------ */
+/* ----------------------------------------------------------- */
 
 // function to  dynamically switch current face to locked and back
 // args -> (ref'd image URL, which die in action window, html Id)
@@ -220,9 +241,21 @@ const resetActionWindow = () => {
 	commitButton.removeEventListener("click", resetActionWindow);
 };
 
+// function to add hearts to either date mood or swoon-o-meter
+// class "meter" id "mood" "swoon" (both have a max of seven hearts) - when they're added can be done later, this is just adding a literl heart graphic to the box
+const addHeart = () => {
+
+};
+
 // function for committing the dice and scoring the roll
 // once this is done, resetActionWindow func will nest at the end
 /* const commitDice = () => {} */
+
+// function to advance the scene
+
+/* ----------------------------------------------------------- */
+/* ---------------- Un-Nested Event Listeners ---------------- */
+/* ----------------------------------------------------------- */
 
 // event listeners for action window
 rollButton.addEventListener("click", rollDice);
