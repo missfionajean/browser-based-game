@@ -220,19 +220,6 @@ const resetActionWindow = () => {
 	commitButton.removeEventListener("click", resetActionWindow);
 };
 
-/* // Source: https://stackoverflow.com/questions/14446447/
-const updateGameWindow = (fileName) => {
-	// .fetch() is a method of window (i.e. this browser view)
-	window
-		// selects file -> grabs contents -> puts in gameWindow
-		.fetch(fileName)
-		.then((response) => response.text())
-		.then((text) => {
-			gameWindow.innerHTML = text;
-		});
-};
- */
-
 // function for committing the dice and scoring the roll
 // once this is done, resetActionWindow func will nest at the end
 /* const commitDice = () => {} */

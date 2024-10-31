@@ -35,20 +35,20 @@ p.heading {
 
 button:hover {
 	background-color: #962481;
-    cursor: url("/images/heart-cursor.png"), pointer;
+	cursor: url("/images/heart-cursor.png"), pointer;
 }
 
 #game-window {
-	justify-self: center;
 	display: flex;
 	flex-direction: column;
-    justify-content: space-between;
+	justify-content: space-between;
 	align-content: space-between;
 	background-color: #f2bce9;
 	width: 675px;
 	height: 300px;
 	border-radius: 5px;
 	padding: 8px;
+	margin-top: 25px;
 }
 
 #game-window p {
@@ -71,14 +71,13 @@ button:hover {
 
 #tm {
 	color: black;
-    font-size: 8px;
-    vertical-align: super;
-    margin: 2px;
+	font-size: 8px;
+	vertical-align: super;
+	margin: 2px;
 	background-color: inherit;
 }
 
 #action-window {
-	justify-self: center;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -88,6 +87,7 @@ button:hover {
 	width: 675px;
 	height: 240px;
 	border-radius: 5px;
+	margin-top: 25px;
 }
 
 #dice-tray {
@@ -131,8 +131,37 @@ button:hover {
 	border-radius: 3px;
 }
 
-/*
-buttons in dice tray when making a choice or when dice aren't being rolled
+#term-head {
+	margin-top: 25px;
+}
 
-also, maybe choices between the dates that affect the date somehow - maybe an additional modifier? a risk/reward hype system?
-*/
+#terms {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-content: space-between;
+	background-color: #f2bce9;
+	width: 675px;
+	height: 700px;
+	border-radius: 5px;
+	padding: 8px;
+}
+
+#terms p {
+	font-size: 16px;
+	color: black;
+	background-color: inherit;
+}
+
+#terms img {
+	background-color: inherit;
+	align-self: center;
+}
+
+#symbol-guide {
+	background-color: inherit;
+}
+
+.symbol-rule {
+	background: inherit;
+}
