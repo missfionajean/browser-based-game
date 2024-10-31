@@ -44,6 +44,11 @@ Point Calculation:
 -Maybe FUNNY, CLEVER and SWEET
 */
 
+// cached elements for main game window (upper box)
+const gameWindow = document.querySelector("#game-window");
+const storyPrompt = document.querySelector("#prompt");
+const storyButtons = document.querySelector("#choices");
+
 // I wanted to event bubble the dice cache, but this was way easier
 const die1 = document.querySelector("#d1");
 const die2 = document.querySelector("#d2");
@@ -164,6 +169,8 @@ const rollDie = (whichDie) => {
 		dieFaces[Math.floor(Math.random() * dieFaces.length)].unlocked;
 };
 
+// THE ABOVE FUNCTION CAN HAVE ITS OWN ARRAY BASED ON USER ANSWERS, I.E. DIFFERENT DICE WEIGHTING
+
 // function for rolling unlocked dice (contains rollDie function)
 const rollDice = () => {
 	if (rollsLeft > 0) {
@@ -213,10 +220,22 @@ const resetActionWindow = () => {
 	commitButton.removeEventListener("click", resetActionWindow);
 };
 
+/* // Source: https://stackoverflow.com/questions/14446447/
+const updateGameWindow = (fileName) => {
+	// .fetch() is a method of window (i.e. this browser view)
+	window
+		// selects file -> grabs contents -> puts in gameWindow
+		.fetch(fileName)
+		.then((response) => response.text())
+		.then((text) => {
+			gameWindow.innerHTML = text;
+		});
+};
+ */
+
 // function for committing the dice and scoring the roll
+// once this is done, resetActionWindow func will nest at the end
 /* const commitDice = () => {} */
 
 // event listeners for action window
 rollButton.addEventListener("click", rollDice);
-
-/* BIG NEED: A way to reset everything to normal at the end of a finished roll attempt. */
