@@ -48,18 +48,21 @@ Point Calculation:
 /* ---------------------- Cached Elements -------------------- */
 /* ----------------------------------------------------------- */
 
-// cached elements for main game window (upper box)
+// general cached elements for main game window (upper box)
 const gameWindow = document.querySelector("#game-window");
 const storyPrompt = document.querySelector("#prompt");
-const storyButtonBox = document.querySelector("#choice-box");
 
-// cached elements for individual story buttons
+// cached elements for story buttons (next, choose date, etc)
+const storyButtonBox = document.querySelector("#choice-box");
 const storyButton1 = document.querySelector("#ch1");
 const storyButton2 = document.querySelector("#ch2");
 const storyButton3 = document.querySelector("#ch3");
 
 // to manipluate content and display of three reactions
-const eventReactions = document.querySelector("#reaction-box");
+const reactionBox = document.querySelector("#reaction-box");
+const funnyReaction = document.querySelector("#funny-re");
+const cleverReaction = document.querySelector("#clever-re");
+const sweetReaction = document.querySelector("#sweet-re");
 
 // cached meter elements (between game and action windows)
 const moodMeter = document.querySelector("#mood");
@@ -139,7 +142,8 @@ let swoonLevel = 0;
 // variables for tracking which date we're on plus scene/choices
 let dateChosen = null; // will only be movieDate for now
 let sceneIndex = 0;
-let choiceMade = null;
+let choiceMade = "funny";
+let performance = "bad";
 
 // variable to track overall date score (counting array in func)
 let dateScore = 0;
@@ -155,25 +159,24 @@ const movieDate = [
 	{
 		type: "intro",
 		text: 'You arrive at the Cineplex to find your date waiting. They smile lightly when they see you, fidgeting in place. It looks like they\'re nervous. Maybe it\'s a good sign?\n\n"Nice to meet you," they say. You awkwardly make small talk as you walk into the building.\n\n(Press "Next" to continue)',
-		choices: false, // to determine which flex is showing
 	},
 	{
 		type: "event",
-		text: 'Nervously, they ask you what kind of movie you\'d like to see. You look up at the "Now Playing" board.',
-		choices: true,
+		text: 'Nervously, they ask you what kind of movie you\'d like to see. You look up at the "Now Playing" board.\n\nWhat do you do? (Roll and click "Make your move!" to continue)',
+		choices: true, // to determine which flex is showing
 		funny: 'Choose the romantic comedy "Falling for Autumn"',
 		clever: 'Choose the oscar-bait drama "A Palace of Glass"',
 		sweet: 'Choose the animated family movie "The Hog Prince"',
 	},
 	{
 		type: "resolve",
-		funny: 'You choose "Falling for Autumn", looks funny!',
-		clever: 'You choose "A Palace of Glass", looks intense!',
-		sweet: 'You choose "The Hog Prince", looks cute!',
-		bad: "Your date seems mildly disappointed, but politely accepts your idea.",
-		med: 'Your date smiles and says "Oh yeah, I\'ve heard good things about this one."',
-		good: "Your date's face lights up! They say \"I've really been wanting to see this one!\"",
-		post: "You buy the tickets and move over to the concession line.",
+		funny: 'You choose "Falling for Autumn", it looks funny!',
+		clever: 'You choose "A Palace of Glass", it looks intense!',
+		sweet: 'You choose "The Hog Prince", it looks cute!',
+		bad: "\n\nYour date seems mildly disappointed, but politely accepts your idea.",
+		med: '\n\nYour date smiles and says "Oh yeah, I\'ve heard good things about this one."',
+		good: "\n\nYour date's face lights up! They say \"I've really been wanting to see this one!\"",
+		post: "\n\nYou buy the tickets and move over to the concession line.",
 		choices: false,
 	},
 	{
@@ -201,6 +204,13 @@ const movieDate = [
 	},
 	{
 		scene: "resolve",
+		bad: "",
+		med: "",
+		good: "",
+		choices: false,
+	},
+	{
+		scene: "end",
 		bad: "",
 		med: "",
 		good: "",
@@ -302,7 +312,7 @@ const rollDice = () => {
 	// adds back button listeners after one roll (remove them after pressing commit button, so you can't roll during interim)
 	commitButton.innerText = "Make your move! (Commit Dice)";
 	lockButtons.addEventListener("click", lockDie);
-	commitButton.addEventListener("click", resetActionWindow);
+	commitButton.addEventListener("click", commitDice);
 };
 
 // function for restoring default values to action window
@@ -353,7 +363,10 @@ const addHeart = (meterElement, heartLevel) => {
 
 // function for committing the dice and scoring the roll
 // once this is done, resetActionWindow func will nest at the end
-/* const commitDice = () => {} */
+const commitDice = () => {
+	resetActionWindow();
+	advanceScene();
+};
 
 // function for displaying story buttons (parameter = 1-3)
 const showStoryButtons = (amount) => {
@@ -408,17 +421,71 @@ const startDate = (event) => {
 	switch (event.target.innerText) {
 		case "See a movie!":
 			dateChosen = movieDate;
-			storyPrompt.innerText = movieDate[0].text;
+			storyPrompt.innerText = dateChosen[0].text;
 			showStoryButtons(1);
 			storyButton1.innerText = "Next";
+			storyButton1.addEventListener("click", advanceScene);
 			break;
 	}
 };
 
 // function to advance the scene
-const advanceScene = (event, whichDate) => {
-	if (event.target.innerText === "Next") {
-		sceneIndex++;
+const advanceScene = () => {
+	// moves forward in date array every time we advance
+	sceneIndex++;
+
+	// displays dynamic text depending on scene type
+	if (dateChosen[sceneIndex].type === "resolve") {
+		// shows the choice that was committed
+		switch (choiceMade) {
+			case "funny":
+				storyPrompt.innerText = dateChosen[sceneIndex].funny;
+				break;
+			case "clever":
+				storyPrompt.innerText = dateChosen[sceneIndex].clever;
+				break;
+			case "sweet":
+				storyPrompt.innerText = dateChosen[sceneIndex].sweet;
+				break;
+		}
+
+		// show date's reaction depending on roll point value
+		switch (performance) {
+			case "bad":
+				storyPrompt.innerText += dateChosen[sceneIndex].bad;
+				break;
+			case "med":
+				storyPrompt.innerText += dateChosen[sceneIndex].med;
+				break;
+			case "good":
+				storyPrompt.innerText += dateChosen[sceneIndex].good;
+				break;
+		}
+
+		// finally, adds post-text to prompt
+		storyPrompt.innerText += dateChosen[sceneIndex].post;
+
+		// if end of date, points are tallied for dynamic text
+	} else if (dateChosen[sceneIndex].type === "end") {
+		// will make this dynamic, but placeholder for now
+		storyPrompt.innerText = dateChosen[sceneIndex].text;
+
+		// if not a resolve or end screen, text is not dynamic
+	} else {
+		storyPrompt.innerText = dateChosen[sceneIndex].text;
+	}
+
+	// determines which div needs to be showing and updates them
+	if (dateChosen[sceneIndex].choices) {
+		showStoryButtons(0);
+		reactionBox.style.display = "flex";
+		funnyReaction.innerText = dateChosen[sceneIndex].funny;
+		cleverReaction.innerText = dateChosen[sceneIndex].clever;
+		sweetReaction.innerText = dateChosen[sceneIndex].sweet;
+		resetActionWindow();
+	} else {
+		reactionBox.style.display = "none";
+		showStoryButtons(1);
 	}
 };
 
