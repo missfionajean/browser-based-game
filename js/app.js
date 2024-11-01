@@ -129,9 +129,6 @@ const allDice = [die1, die2, die3, die4, die5];
 // array that lets us iterate past locked dice when rolling
 let lockStates = ["unlocked", "unlocked", "unlocked", "unlocked", "unlocked"];
 
-// array for storing final roll values during dice commit
-let finalRoll = ["none", "none", "none", "none", "none"];
-
 // variable for tracking roll attempts in rollDice() function
 let rollsLeft = 3;
 
@@ -219,7 +216,6 @@ const movieDate = [
 ];
 
 /* DATE IDEAS
-- At The Movies
 - Picnic In The Park
 - Hiking Trail Romance
 - Roller Skating Rink
@@ -361,32 +357,64 @@ const addHeart = (meterElement, heartLevel) => {
 	}
 };
 
-// function for committing the dice and scoring the roll
-// once this is done, resetActionWindow func will nest at the end
-const commitDice = () => {
-	// [funny, clever, sweet, swoon]
-	const faceCount = [0, 0, 0, 0];
+// function for scoring the current state of the dice
+const scoreDice = () => {
+	// array of objects that will be used in die face counting
+	const faceCount = [
+		{ choice: "funny", count: 0 },
+		{ choice: "clever", count: 0 },
+		{ choice: "sweet", count: 0 },
+	];
 
-	// iterates through dice an banks the count
+	// separate variable for swoon counting (exempted from scoring)
+	swoonCount = 0;
+
+	// iterates through dice and banks the count in faceCount
 	for (die of allDice) {
 		if (die.src.includes("laugh")) {
-			faceCount[0] += 1;
+			faceCount[0].count += 1;
 		} else if (die.src.includes("brain")) {
-			faceCount[1] += 1;
+			faceCount[1].count += 1;
 		} else if (die.src.includes("rose")) {
-			faceCount[2] += 1;
+			faceCount[2].count += 1;
 		} else if (die.src.includes("heart")) {
-			faceCount[3] += 1;
+			swoonCount += 1;
 		}
 	}
 
 	// grabs the max value and finds banks number/choice
-	Math.max(faceCount);
-	choiceMade = "choice";
+	let maxFace = 0;
+	for (face of faceCount) {
+		if (face.count > maxFace) {
+			maxFace = face.count;
+			choiceMade = face.choice;
+		}
+	}
 
-	// calculate score of move and updates more variables
-	dateScore += null;
-	dateOpinion = "bad";
+	// calculate score of final roll and updates total score
+	let eventScore = maxFace * 100;
+	dateScore += eventScore;
+
+	// uses switch trickle-down to set date opinion based on score
+	switch (eventScore) {
+		case 100:
+		case 200:
+			dateOpinion = "bad";
+			break;
+		case 300:
+		case 400:
+			dateOpinion = "med";
+			break;
+		case 500:
+			dateOpinion = "good";
+			break;
+	}
+};
+
+// function for committing the dice and scoring the roll
+const commitDice = () => {
+	// scores dice and adjusts progress meters
+	scoreDice();
 
 	/* Variables still to be adjusted:
 	addHeart(moodMeter, moodLevel)
