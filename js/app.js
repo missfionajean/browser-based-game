@@ -128,6 +128,89 @@ let rollsLeft = 3;
 let moodLevel = 0;
 let swoonLevel = 0;
 
+// variables for tracking which date we're on plus the scene
+let sceneIndex = 0;
+let dateChosen = null;
+
+// variable to track overall date score (counting array in func)
+let dateScore = 0;
+
+/* ----------------------------------------------------------- */
+/* ----------------------- Date Events ----------------------- */
+/* ----------------------------------------------------------- */
+
+// this is where the HTML/text for the date flow(s) will go.
+
+// array of objects for movie date, to be used by advance
+const movieDate = [
+	{
+		scene: "intro",
+		text: "You arrive at the Cineplex to find your date waiting. They smile lightly when they see you, fidgeting in place. \"Nice to meet you.\" they say. You awkwardly make small talk as you walk into the building.\n(Press \"Next\" to continue)",
+		choices: false, // to determine which flex is showing
+	},
+	{
+		scene: "event1",
+		text: "Nervously, they ask you what kind of movie you'd like to see. You look up at the \"Now Playing\" board.",
+		choices: true,
+		funny: "Choose the romantic comedy \"Falling for Autumn\"",
+		clever: "Choose the oscar-bait drama \"A Palace of Glass\"",
+		sweet: "Choose the animated family movie \"The Hog Prince\""
+	},
+	{
+		scene: "resolve1",
+		funny: "You choose \"Falling for Autumn\", looks funny!",
+		clever: "You choose \"A Palace of Glass\", looks intense!",
+		sweet: "You choose \"The Hog Prince\", looks cute!",
+		bad: "Your date seems mildly disappointed, but politely accepts your idea.",
+		med: "Your date smiles and says \"Oh yeah, I've heard good things about this one.\"",
+		good: "Your date's face lights up! They say \"I've really been wanting to see this one!\"",
+		post: "You buy the tickets and move over to the concession line.",
+		choices: false,
+	},
+	{
+		scene: "event2",
+		text: "",
+		choices: true,
+		funny: "",
+		clever: "",
+		sweet: ""
+	},
+	{
+		scene: "resolve2",
+		bad: "",
+		med: "",
+		good: "",
+		choices: false,
+	},
+	{
+		scene: "event3",
+		text: "",
+		choices: true,
+		funny: "",
+		clever: "",
+		sweet: ""
+	},
+	{
+		scene: "resolve3",
+		bad: "",
+		med: "",
+		good: "",
+		choices: false,
+	},
+];
+
+/* DATE IDEAS
+- At The Movies
+- Picnic In The Park
+- Hiking Trail Romance
+- Roller Skating Rink
+- Miniature Golf Course
+- Out To A Fancy Dinner
+- Dancing At A Club
+- Going To A Concert
+- Quiet Night At Home
+*/
+
 /* ----------------------------------------------------------- */
 /* ------------------------ Functions ------------------------ */
 /* ----------------------------------------------------------- */
@@ -244,7 +327,6 @@ const resetActionWindow = () => {
 };
 
 // function to add hearts to either date mood or swoon-o-meter
-// class "meter" id "mood" "swoon" (both have a max of seven hearts) - when they're added can be done later, this is just adding a literl heart graphic to the box
 const addHeart = (meterElement, heartLevel) => {
 	if (heartLevel < 7) {
 		// creates meter heart element, adds src/id, appends to meter
@@ -253,9 +335,9 @@ const addHeart = (meterElement, heartLevel) => {
 		heartIcon.id = "meter-heart";
 		meterElement.appendChild(heartIcon);
 		if (meterElement === moodMeter) {
-			moodLevel++
+			moodLevel++;
 		} else if (meterElement === swoonMeter) {
-			swoonLevel++
+			swoonLevel++;
 		}
 	}
 };
@@ -265,7 +347,11 @@ const addHeart = (meterElement, heartLevel) => {
 /* const commitDice = () => {} */
 
 // function to advance the scene
-const advanceScene = () => {};
+const advanceScene = (event, whichDate) => {
+	if (event.target.innerText === "Next") {
+		sceneIndex++;
+	}
+};
 
 /* ----------------------------------------------------------- */
 /* ------- Un-Nested Event Listeners & Called Functions ------ */
@@ -273,38 +359,3 @@ const advanceScene = () => {};
 
 // event listeners for action window
 rollButton.addEventListener("click", rollDice);
-
-// heart adding test cases
-addHeart(moodMeter, moodLevel);
-console.log(moodLevel);
-addHeart(moodMeter, moodLevel);
-console.log(moodLevel);
-addHeart(moodMeter, moodLevel);
-console.log(moodLevel);
-addHeart(moodMeter, moodLevel);
-console.log(moodLevel);
-addHeart(moodMeter, moodLevel);
-console.log(moodLevel);
-addHeart(moodMeter, moodLevel);
-console.log(moodLevel);
-addHeart(moodMeter, moodLevel);
-console.log(moodLevel);
-addHeart(moodMeter, moodLevel);
-console.log(moodLevel);
-
-addHeart(swoonMeter, swoonLevel);
-console.log(swoonLevel);
-addHeart(swoonMeter, swoonLevel);
-console.log(swoonLevel);
-addHeart(swoonMeter, swoonLevel);
-console.log(swoonLevel);
-addHeart(swoonMeter, swoonLevel);
-console.log(swoonLevel);
-addHeart(swoonMeter, swoonLevel);
-console.log(swoonLevel);
-addHeart(swoonMeter, swoonLevel);
-console.log(swoonLevel);
-addHeart(swoonMeter, swoonLevel);
-console.log(swoonLevel);
-addHeart(swoonMeter, swoonLevel);
-console.log(swoonLevel);
