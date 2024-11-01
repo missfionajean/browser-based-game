@@ -131,6 +131,7 @@ let lockStates = ["unlocked", "unlocked", "unlocked", "unlocked", "unlocked"];
 
 // variable for tracking roll attempts in rollDice() function
 let rollsLeft = 3;
+let practice = true;
 
 // for mood and swoon-o-meter tracking (out of seven for now)
 let moodLevel = 0;
@@ -144,6 +145,7 @@ let dateOpinion = "bad";
 
 // variable to track overall date score (counting array in func)
 let dateScore = 0;
+let moodTracker = 0;
 
 /* ----------------------------------------------------------- */
 /* ----------------------- Date Events ----------------------- */
@@ -173,7 +175,26 @@ const movieDate = [
 		bad: "\n\nYour date seems mildly disappointed, but politely accepts your idea.",
 		med: '\n\nYour date smiles and says "Oh yeah, I\'ve heard good things about this one."',
 		good: "\n\nYour date's face lights up! They say \"I've really been wanting to see this one!\"",
-		post: "\n\nYou buy the tickets and move over to the concession line.",
+		post: "\n\nYou buy the tickets and head toward the consession counter. You and your date chat idly as you approach an empty line. They say \"Don't you love it when you don't have to wait? Feels like winning the timing lottery.\" You both chuckle. Their laugh is infectious.",
+		choices: false,
+	},
+	{
+		scene: "event",
+		text: 'Suddenly, a man talking on a cell phone shoves in front of you right as you reach the counter. He doesn\'t even look at you. Your date looks quite annoyed.\n\nWhat do you do? (Roll and click "Make your move!" to continue)',
+		choices: true,
+		funny: 'Say "Ah, that must be Mr Movie. Here on very important business."',
+		clever: "Spy another cashier opening their register and pull your date over.",
+		sweet: "Tell the man you were there first and he has to wait his turn.",
+	},
+	{
+		scene: "resolve",
+		funny: 'You make light of the situation, suggesting this will just give you more time to talk.',
+		clever: 'You grab your date\'s arm and slide over to the new register quick as a flash!',
+		sweet: 'You stand up for your date! The cashier glares at the man and he sheepishly backs down.',
+		bad: "\n\n\"Uh, thanks.\" your date says. But, their voice sounds dejected. Maybe that wasn't so smooth.",
+		med: "\n\nYour date laughs it off and falls back into conversation with you. Not too shabby!",
+		good: "\n\nRelief washes over their face. A blush fills their cheeks as you two continue to flirt. Nice!",
+		post: "\n\nTwo minutes later, you're off to the theatre with two sodas and a popcorn bag in hand! In the dark of the theatre, you both sidle into a pair of seats in the back row. ",
 		choices: false,
 	},
 	{
@@ -186,24 +207,13 @@ const movieDate = [
 	},
 	{
 		scene: "resolve",
-		bad: "",
-		med: "",
-		good: "",
-		choices: false,
-	},
-	{
-		scene: "event",
-		text: "",
-		choices: true,
-		funny: "",
-		clever: "",
-		sweet: "",
-	},
-	{
-		scene: "resolve",
-		bad: "",
-		med: "",
-		good: "",
+		funny: '',
+		clever: '',
+		sweet: '',
+		bad: "\n\n",
+		med: "\n\n",
+		good: "\n\n",
+		post: "\n\n",
 		choices: false,
 	},
 	{
@@ -303,12 +313,16 @@ const rollDice = () => {
 			currentIndex++;
 		}
 		rollsLeft--;
-		rollButton.innerText = `Roll the dice! (${rollsLeft} Remaining)`;
+		if (practice) {
+			rollButton.innerText = `Practice rolling! (${rollsLeft} Remaining)`;
+		} else {
+			rollButton.innerText = `Roll the dice! (${rollsLeft} Remaining)`;
+		}
 	}
 	// adds back button listeners after one roll (remove them after pressing commit button, so you can't roll during interim)
 	commitButton.innerText = "Make your move! (Commit Dice)";
 	lockButtons.addEventListener("click", lockDie);
-	commitButton.addEventListener("click", commitDice);
+	commitButton.addEventListener("click", resetActionWindow);
 };
 
 // function for restoring default values to action window
@@ -333,7 +347,7 @@ const resetActionWindow = () => {
 	}
 
 	// resets text of action buttons to og state
-	rollButton.innerText = "Roll the dice! (3 Remaining)";
+	rollButton.innerText = "Practice rolling! (3 Remaining)";
 	commitButton.innerText = "Make your move! (Must Roll First)";
 
 	// removes lock & commit functionailty until next roll is made
@@ -366,9 +380,6 @@ const scoreDice = () => {
 		{ choice: "sweet", count: 0 },
 	];
 
-	// separate variable for swoon counting (exempted from scoring)
-	swoonCount = 0;
-
 	// iterates through dice and banks the count in faceCount
 	for (die of allDice) {
 		if (die.src.includes("laugh")) {
@@ -378,7 +389,7 @@ const scoreDice = () => {
 		} else if (die.src.includes("rose")) {
 			faceCount[2].count += 1;
 		} else if (die.src.includes("heart")) {
-			swoonCount += 1;
+			addHeart(swoonMeter, swoonLevel);
 		}
 	}
 
@@ -394,6 +405,7 @@ const scoreDice = () => {
 	// calculate score of final roll and updates total score
 	let eventScore = maxFace * 100;
 	dateScore += eventScore;
+	moodTracker += eventScore;
 
 	// uses switch trickle-down to set date opinion based on score
 	switch (eventScore) {
@@ -416,10 +428,26 @@ const commitDice = () => {
 	// scores dice and adjusts progress meters
 	scoreDice();
 
-	/* Variables still to be adjusted:
-	addHeart(moodMeter, moodLevel)
-	addHeart(swoonMeter, swoonLevel)
+	// while loop adds hearts based on new point earnings (saving remainder)
+	while (moodTracker >= 250) {
+		addHeart(moodMeter, moodLevel);
+		moodTracker -= 250;
+	}
+
+	/*
+	Calculating score intervals:
+	date min score - 300 (100 per event with no swoon)
+	date max score - 2100 (500 per event with 600 point swoon)
+	median score with no swoon - 900
+	median score overall - 1200
+	threshhold to get a second date - 1000 / 4 hearts (for now)
 	*/
+
+	// prevents banking of points between scenes without taking away roll practice
+	commitButton.removeEventListener("click", commitDice);
+
+	// resets practice state to display correct text in roll button
+	practice = true;
 
 	// moves to next scene after calculations are done
 	resetActionWindow();
@@ -492,6 +520,8 @@ const advanceScene = () => {
 	// moves forward in date array every time we advance
 	sceneIndex++;
 
+	// put an if statement here to add +1 to index if swoon not acheieved (skips it)
+
 	// displays dynamic text depending on scene type
 	if (dateChosen[sceneIndex].type === "resolve") {
 		// shows the choice that was committed
@@ -528,6 +558,8 @@ const advanceScene = () => {
 		// will make this dynamic, but placeholder for now
 		storyPrompt.innerText = dateChosen[sceneIndex].text;
 
+		// uses dateScore to
+
 		// if not a resolve or end screen, text is not dynamic
 	} else {
 		storyPrompt.innerText = dateChosen[sceneIndex].text;
@@ -541,6 +573,9 @@ const advanceScene = () => {
 		cleverReaction.innerText = dateChosen[sceneIndex].clever;
 		sweetReaction.innerText = dateChosen[sceneIndex].sweet;
 		resetActionWindow();
+		practice = false;
+		rollButton.innerText = "Roll the dice! (3 Remaining)";
+		commitButton.addEventListener("click", commitDice);
 	} else {
 		reactionBox.style.display = "none";
 		showStoryButtons(1);
