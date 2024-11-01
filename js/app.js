@@ -143,7 +143,7 @@ let swoonLevel = 0;
 let dateChosen = null; // will only be movieDate for now
 let sceneIndex = 0;
 let choiceMade = "funny";
-let performance = "bad";
+let dateOpinion = "bad";
 
 // variable to track overall date score (counting array in func)
 let dateScore = 0;
@@ -364,6 +364,36 @@ const addHeart = (meterElement, heartLevel) => {
 // function for committing the dice and scoring the roll
 // once this is done, resetActionWindow func will nest at the end
 const commitDice = () => {
+	// [funny, clever, sweet, swoon]
+	const faceCount = [0, 0, 0, 0];
+
+	// iterates through dice an banks the count
+	for (die of allDice) {
+		if (die.src.includes("laugh")) {
+			faceCount[0] += 1;
+		} else if (die.src.includes("brain")) {
+			faceCount[1] += 1;
+		} else if (die.src.includes("rose")) {
+			faceCount[2] += 1;
+		} else if (die.src.includes("heart")) {
+			faceCount[3] += 1;
+		}
+	}
+
+	// grabs the max value and finds banks number/choice
+	Math.max(faceCount);
+	choiceMade = "choice";
+
+	// calculate score of move and updates more variables
+	dateScore += null;
+	dateOpinion = "bad";
+
+	/* Variables still to be adjusted:
+	addHeart(moodMeter, moodLevel)
+	addHeart(swoonMeter, swoonLevel)
+	*/
+
+	// moves to next scene after calculations are done
 	resetActionWindow();
 	advanceScene();
 };
@@ -450,7 +480,7 @@ const advanceScene = () => {
 		}
 
 		// show date's reaction depending on roll point value
-		switch (performance) {
+		switch (dateOpinion) {
 			case "bad":
 				storyPrompt.innerText += dateChosen[sceneIndex].bad;
 				break;
