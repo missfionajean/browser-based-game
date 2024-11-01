@@ -175,11 +175,11 @@ const movieDate = [
 		bad: "\n\nYour date seems mildly disappointed, but politely accepts your idea.",
 		med: '\n\nYour date smiles and says "Oh yeah, I\'ve heard good things about this one."',
 		good: "\n\nYour date's face lights up! They say \"I've really been wanting to see this one!\"",
-		post: "\n\nYou buy the tickets and head toward the consession counter. You and your date chat idly as you approach an empty line. They say \"Don't you love it when you don't have to wait? Feels like winning the timing lottery.\" You both chuckle. Their laugh is infectious.",
+		post: '\n\nYou buy the tickets and head toward the consession counter. You and your date chat idly as you approach an empty line. They say "Don\'t you love it when you don\'t have to wait? Feels like winning the timing lottery." You both chuckle. Their laugh is infectious. As they talk about work, their eyes seem to sparkle. You almost forget where you are for a moment. "What do you do for work?" they ask. You babble out the broad details, but...',
 		choices: false,
 	},
 	{
-		scene: "event",
+		type: "event",
 		text: 'Suddenly, a man talking on a cell phone shoves in front of you right as you reach the counter. He doesn\'t even look at you. Your date looks quite annoyed.\n\nWhat do you do? (Roll and click "Make your move!" to continue)',
 		choices: true,
 		funny: 'Say "Ah, that must be Mr Movie. Here on very important business."',
@@ -187,29 +187,29 @@ const movieDate = [
 		sweet: "Tell the man you were there first and he has to wait his turn.",
 	},
 	{
-		scene: "resolve",
-		funny: 'You make light of the situation, suggesting this will just give you more time to talk.',
-		clever: 'You grab your date\'s arm and slide over to the new register quick as a flash!',
-		sweet: 'You stand up for your date! The cashier glares at the man and he sheepishly backs down.',
-		bad: "\n\n\"Uh, thanks.\" your date says. But, their voice sounds dejected. Maybe that wasn't so smooth.",
+		type: "resolve",
+		funny: "You make light of the situation, suggesting this will just give you more time to talk.",
+		clever: "You grab your date's arm and slide over to the new register quick as a flash!",
+		sweet: "You stand up for your date! The cashier glares at the man and he sheepishly backs down.",
+		bad: '\n\n"Uh, thanks." your date says. But, their voice sounds dejected. Maybe that wasn\'t so smooth.',
 		med: "\n\nYour date laughs it off and falls back into conversation with you. Not too shabby!",
 		good: "\n\nRelief washes over their face. A blush fills their cheeks as you two continue to flirt. Nice!",
-		post: "\n\nTwo minutes later, you're off to the theatre with two sodas and a popcorn bag in hand! In the dark of the theatre, you both sidle into a pair of seats in the back row. ",
+		post: '\n\nTwo minutes later, you\'re off to the theatre with two sodas and a popcorn bag in hand! In the dark of the theatre, you both sidle into a pair of seats in the back row. As you sit down, your hand incidentally bumps theirs. They break the tension by saying "Check this out!" They toss a piece of popcorn up and it bounces anti-climactically off their forehead. You take turns attempting to catch them until the movie starts.',
 		choices: false,
 	},
 	{
-		scene: "event",
-		text: "",
+		type: "event",
+		text: 'As the movie plays, your eyes keep drifting over to your date. Did they just look at you, too? Distracted, you reach for the popcorn right as they do. Your hands touch again!\n\nWhat do you do? (Roll and click "Make your move!" to continue)',
 		choices: true,
 		funny: "",
 		clever: "",
 		sweet: "",
 	},
 	{
-		scene: "resolve",
-		funny: '',
-		clever: '',
-		sweet: '',
+		type: "resolve",
+		funny: "",
+		clever: "",
+		sweet: "",
 		bad: "\n\n",
 		med: "\n\n",
 		good: "\n\n",
@@ -217,7 +217,7 @@ const movieDate = [
 		choices: false,
 	},
 	{
-		scene: "end",
+		type: "end",
 		bad: "",
 		med: "",
 		good: "",
@@ -319,7 +319,11 @@ const rollDice = () => {
 			rollButton.innerText = `Roll the dice! (${rollsLeft} Remaining)`;
 		}
 	}
-	// adds back button listeners after one roll (remove them after pressing commit button, so you can't roll during interim)
+	// adds listeners back after roll (and scoring if appropriate)
+	if (practice === false) {
+		commitButton.addEventListener("click", commitDice);
+	}
+	// updates text, allows dice locking, committ resets dice state
 	commitButton.innerText = "Make your move! (Commit Dice)";
 	lockButtons.addEventListener("click", lockDie);
 	commitButton.addEventListener("click", resetActionWindow);
@@ -575,7 +579,6 @@ const advanceScene = () => {
 		resetActionWindow();
 		practice = false;
 		rollButton.innerText = "Roll the dice! (3 Remaining)";
-		commitButton.addEventListener("click", commitDice);
 	} else {
 		reactionBox.style.display = "none";
 		showStoryButtons(1);
