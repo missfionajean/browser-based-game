@@ -61,7 +61,7 @@ button:hover {
 	background-color: inherit;
 }
 
-#choices {
+#choice-box {
 	background-color: inherit;
 	display: flex; /* change to none to hide */
 	justify-content: flex-end;

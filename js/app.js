@@ -51,7 +51,12 @@ Point Calculation:
 // cached elements for main game window (upper box)
 const gameWindow = document.querySelector("#game-window");
 const storyPrompt = document.querySelector("#prompt");
-const storyButtons = document.querySelector("#choices");
+const storyButtonBox = document.querySelector("#choice-box");
+
+// cached elements for individual story buttons
+const storyButton1 = document.querySelector("#ch1");
+const storyButton2 = document.querySelector("#ch2");
+const storyButton3 = document.querySelector("#ch3");
 
 // to manipluate content and display of three reactions
 const eventReactions = document.querySelector("#reaction-box");
@@ -80,6 +85,9 @@ const commitButton = document.querySelector("#ab2");
 
 // defining current URL path for proper image finding
 const currentURL = window.location.href;
+
+// for easier iteration within storyButtonBox
+const storyButtons = [storyButton1, storyButton2, storyButton3];
 
 // defining array for all die faces to ease switching; each is an object with locked and unlocked properties
 const dieFaces = [
@@ -128,9 +136,10 @@ let rollsLeft = 3;
 let moodLevel = 0;
 let swoonLevel = 0;
 
-// variables for tracking which date we're on plus the scene
+// variables for tracking which date we're on plus scene/choices
+let dateChosen = null; // will only be movieDate for now
 let sceneIndex = 0;
-let dateChosen = null;
+let choiceMade = null;
 
 // variable to track overall date score (counting array in func)
 let dateScore = 0;
@@ -144,54 +153,54 @@ let dateScore = 0;
 // array of objects for movie date, to be used by advance
 const movieDate = [
 	{
-		scene: "intro",
-		text: "You arrive at the Cineplex to find your date waiting. They smile lightly when they see you, fidgeting in place. \"Nice to meet you.\" they say. You awkwardly make small talk as you walk into the building.\n(Press \"Next\" to continue)",
+		type: "intro",
+		text: 'You arrive at the Cineplex to find your date waiting. They smile lightly when they see you, fidgeting in place. It looks like they\'re nervous. Maybe it\'s a good sign?\n\n"Nice to meet you," they say. You awkwardly make small talk as you walk into the building.\n\n(Press "Next" to continue)',
 		choices: false, // to determine which flex is showing
 	},
 	{
-		scene: "event1",
-		text: "Nervously, they ask you what kind of movie you'd like to see. You look up at the \"Now Playing\" board.",
+		type: "event",
+		text: 'Nervously, they ask you what kind of movie you\'d like to see. You look up at the "Now Playing" board.',
 		choices: true,
-		funny: "Choose the romantic comedy \"Falling for Autumn\"",
-		clever: "Choose the oscar-bait drama \"A Palace of Glass\"",
-		sweet: "Choose the animated family movie \"The Hog Prince\""
+		funny: 'Choose the romantic comedy "Falling for Autumn"',
+		clever: 'Choose the oscar-bait drama "A Palace of Glass"',
+		sweet: 'Choose the animated family movie "The Hog Prince"',
 	},
 	{
-		scene: "resolve1",
-		funny: "You choose \"Falling for Autumn\", looks funny!",
-		clever: "You choose \"A Palace of Glass\", looks intense!",
-		sweet: "You choose \"The Hog Prince\", looks cute!",
+		type: "resolve",
+		funny: 'You choose "Falling for Autumn", looks funny!',
+		clever: 'You choose "A Palace of Glass", looks intense!',
+		sweet: 'You choose "The Hog Prince", looks cute!',
 		bad: "Your date seems mildly disappointed, but politely accepts your idea.",
-		med: "Your date smiles and says \"Oh yeah, I've heard good things about this one.\"",
+		med: 'Your date smiles and says "Oh yeah, I\'ve heard good things about this one."',
 		good: "Your date's face lights up! They say \"I've really been wanting to see this one!\"",
 		post: "You buy the tickets and move over to the concession line.",
 		choices: false,
 	},
 	{
-		scene: "event2",
+		scene: "event",
 		text: "",
 		choices: true,
 		funny: "",
 		clever: "",
-		sweet: ""
+		sweet: "",
 	},
 	{
-		scene: "resolve2",
+		scene: "resolve",
 		bad: "",
 		med: "",
 		good: "",
 		choices: false,
 	},
 	{
-		scene: "event3",
+		scene: "event",
 		text: "",
 		choices: true,
 		funny: "",
 		clever: "",
-		sweet: ""
+		sweet: "",
 	},
 	{
-		scene: "resolve3",
+		scene: "resolve",
 		bad: "",
 		med: "",
 		good: "",
@@ -346,6 +355,66 @@ const addHeart = (meterElement, heartLevel) => {
 // once this is done, resetActionWindow func will nest at the end
 /* const commitDice = () => {} */
 
+// function for displaying story buttons (parameter = 1-3)
+const showStoryButtons = (amount) => {
+	// sets everything to invisible for a baseline
+	storyButtonBox.style.display = "none";
+	for (button of storyButtons) {
+		button.style.display = "none";
+	}
+
+	// if amount is at least 1, box and buttons become visible
+	if (amount > 0) {
+		storyButtonBox.style.display = "flex";
+		let buttonIndex = 0;
+		for (button of storyButtons) {
+			button.style.display = "block";
+			buttonIndex++;
+			if (buttonIndex === amount) {
+				break;
+			}
+		}
+	}
+};
+
+// function for getting you from intro screen to date flow
+const getMatched = () => {
+	storyPrompt.innerText =
+		"You've been matched with Alex! They are 5'8\" with sandy blone hair. They're a professional dog walker, enjoy italian food and have an expansive vinyl record collection. When asked if they prefer Saturdays or Sundays, they said \"Both? Haha ;)\" We think you two will hit it off!\n\nAnd would you look at that! They've agreed to meet you for a date!\n\nWhich date would you like to go on?";
+
+	// removes previous function from button and shows all three
+	storyButton1.removeEventListener("click", getMatched);
+	showStoryButtons(3);
+
+	// set button text to match available date options
+	// the choice can matter later, but focus on movie for now
+	storyButton1.innerText = "See a movie!";
+	storyButton2.innerText = "(Under Construction)";
+	storyButton3.innerText = "(Under Construction)";
+
+	// adds a startDate function to each (func will read target)
+	for (button of storyButtons) {
+		button.addEventListener("click", startDate);
+	}
+};
+
+const startDate = (event) => {
+	// reemoves previous listeners
+	for (button of storyButtons) {
+		button.removeEventListener("click", startDate);
+	}
+
+	// sets starting state of new date (more can be added later)
+	switch (event.target.innerText) {
+		case "See a movie!":
+			dateChosen = movieDate;
+			storyPrompt.innerText = movieDate[0].text;
+			showStoryButtons(1);
+			storyButton1.innerText = "Next";
+			break;
+	}
+};
+
 // function to advance the scene
 const advanceScene = (event, whichDate) => {
 	if (event.target.innerText === "Next") {
@@ -359,3 +428,6 @@ const advanceScene = (event, whichDate) => {
 
 // event listeners for action window
 rollButton.addEventListener("click", rollDice);
+
+// event listener for starting date
+storyButton1.addEventListener("click", getMatched);
