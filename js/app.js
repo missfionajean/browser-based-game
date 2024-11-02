@@ -191,7 +191,7 @@ const movieDate = [
 		funny: "You make light of the situation, suggesting this will just give you more time to talk.",
 		clever: "You grab your date's arm and slide over to the new register quick as a flash!",
 		sweet: "You stand up for your date! The cashier glares at the man and he sheepishly backs down.",
-		bad: '\n\n"Uh, thanks." your date says. But, their voice sounds dejected. Maybe that wasn\'t so smooth.',
+		bad: '\n\n"Uh... Okay." your date says. Their voice sounds dejected. Maybe that wasn\'t so smooth.',
 		med: "\n\nYour date laughs it off and falls back into conversation with you. Not too shabby!",
 		good: "\n\nRelief washes over their face. A blush fills their cheeks as you two continue to flirt. Nice!",
 		post: '\n\nTwo minutes later, you\'re off to the theatre with two sodas and a popcorn bag in hand! In the dark of the theatre, you both sidle into a pair of seats in the back row. As you sit down, your hand incidentally bumps theirs. They break the tension by saying "Check this out!" They toss a piece of popcorn up and it bounces anti-climactically off their forehead. You take turns attempting to catch them until the movie starts.',
@@ -201,26 +201,33 @@ const movieDate = [
 		type: "event",
 		text: 'As the movie plays, your eyes keep drifting over to your date. Did they just look at you, too? Distracted, you reach for the popcorn right as they do. Your hands touch again!\n\nWhat do you do? (Roll and click "Make your move!" to continue)',
 		choices: true,
-		funny: "",
-		clever: "",
-		sweet: "",
+		funny: 'Pretend your hand is a shark and "chomp" on theirs with a smile',
+		clever: 'Whisper "Great minds think alike..." and nudge them playfully.',
+		sweet: "Grab their hand and hold it gently - no words needed right now.",
 	},
 	{
 		type: "resolve",
-		funny: "",
-		clever: "",
-		sweet: "",
-		bad: "\n\n",
-		med: "\n\n",
-		good: "\n\n",
-		post: "\n\n",
+		funny: 'You quietly hum the "Jaws" theme and nip at their hand. They let out a surprised gasp.',
+		clever: "You compliment your date. They nod with a small smile, fishing more popcorn.",
+		sweet: "You take fate by the... well... hand. They look over, the light of the movie reflecting in their eyes.",
+		bad: "\n\nThey politely withdraw their hand with a small chuckle. You both adjust back into your separate seats.",
+		med: "\n\nThey hold your hand for a few scenes. The movie plays out and you chat with your date about it afterward.",
+		good: "\n\nThey interlace their fingers with yours and don't let go, leaning against you until the lights come up.",
+		post: '\n\nWhen the credits have finished rolling and the popcorn has either been eaten or dropped to the floor, you both stand and make your way out to the lobby once more. You ask them what they\'re looking for in a partner and they say "I guess I want someone who accepts me exactly as I am. Someone I can sit and watch movies with until we get old. And you?" You detail your ideal romance until you find yourselves standing outside the Cineplex.',
+		choices: false,
+	},
+	{
+		type: "swoon",
+		mild: "Your Swoon-O-Meter is full!\n\nYou shuffle slightly, unsure how to say goodbye. You feel like the date went well enough, but you're wondering if there's truly a spark. Your eyes wander over to find your date apparently locked in the same thought. They take a hesitant step toward you and place their hands on your waist. You both lean in slowly until your lips brush, sending a shiver through your body. They kiss you gently until their phone alarm goes off.\n\n\"Gotta get home and feed the dogs.\" they say. They offer you a small smile as they step away.",
+		hot: 'Your Swoon-O-Meter is full!\n\nYou yawn and stretch, shaking off the stiffness of sitting for two hours. You turn to find your date watching you. "It was a good movie," they say. You take an unconscious step closer until you\'re less than a foot away. Your date closes the gap and finds your lips with theirs. You explore each other\'s mouths thoroughly, bodies pressing tighter against each other. The moment is finally interrupted by the chime of a phone alarm.\n\n"Gotta get home and feed the dogs." they say. They offer you a warm smile and linger slightly before separating their body from yours.',
+		spicy: "Your Swoon-O-Meter is full!\n\nIt doesn't take long at all for your date's hands to find your body out on the sidewalk. It's clear that the heat you felt between the two of you wasn't just one-sided! Within seconds, your hands are desperately pulling them closer. Their fingertips dig into your hips and you sink deeply into the kiss. Time slips by in a haze, until you are snapped back to reality by the ringing of a phone alarm.\n\n\"Gotta get home and feed the dogs.\" they say. However, they don't move from your embrace. Their eyes stay locked on yours for an impossibly long moment before they finally take a step back.",
 		choices: false,
 	},
 	{
 		type: "end",
-		bad: "",
-		med: "",
-		good: "",
+		bad: '"Thanks for the movie," your date says. Unsure how to cap off the night, they offer you a polite handshake. You return it and the two of you walk in separate directions back the way you came. Nothing ventured, nothing gained, huh? At least it was a good movie.\n\nTough luck! You didn\'t earn a second date this time. But, you can always try again! Thanks for playing Swoon!',
+		med: '"Thanks for a fun night," your date says with a slight yawn. "Looking forward to the next one!" They wander off, leaving you with butterflies in your stomach."Next time you pick the movie!" you shout after them. They nod playfully and head home.\n\nCongratulations! You\'ve earned a second date. Thanks for playing Swoon!',
+		good: '"This was a wonderful night..." your date says, trailing off. Their eyes wander down your body. There is a tension in the air that you could cut with a knife. You take a step to close the distance between you.\n\n"Who says it has to end...?" you ask. They smile devilishly and beckon you to follow them home.\n\nCongratulations! You\'ve earned a second date. And it looks like this one isn\'t over. Go get \'em, tiger! Thanks for playing Swoon!',
 		choices: false,
 	},
 ];
@@ -361,7 +368,7 @@ const resetActionWindow = () => {
 
 // function to add hearts to either date mood or swoon-o-meter
 const addHeart = (meterElement, heartLevel) => {
-	if (heartLevel < 7) {
+	if (heartLevel < 5) {
 		// creates meter heart element, adds src/id, appends to meter
 		const heartIcon = document.createElement("img");
 		heartIcon.src = "images/heart-icon-white.png";
@@ -394,6 +401,7 @@ const scoreDice = () => {
 			faceCount[2].count += 1;
 		} else if (die.src.includes("heart")) {
 			addHeart(swoonMeter, swoonLevel);
+			dateScore += 25;
 		}
 	}
 
@@ -414,13 +422,13 @@ const scoreDice = () => {
 	// uses switch trickle-down to set date opinion based on score
 	switch (eventScore) {
 		case 100:
-		case 200:
 			dateOpinion = "bad";
 			break;
+		case 200:
 		case 300:
-		case 400:
 			dateOpinion = "med";
 			break;
+		case 400:
 		case 500:
 			dateOpinion = "good";
 			break;
@@ -433,9 +441,9 @@ const commitDice = () => {
 	scoreDice();
 
 	// while loop adds hearts based on new point earnings (saving remainder)
-	while (moodTracker >= 250) {
+	while (moodTracker >= 200) {
 		addHeart(moodMeter, moodLevel);
-		moodTracker -= 250;
+		moodTracker -= 200;
 	}
 
 	/*
@@ -519,12 +527,38 @@ const startDate = (event) => {
 	}
 };
 
+// page reloading function, since we're not storing data right now
+const pageReload = () => {
+	location.reload()
+}
+
+
 // function to advance the scene
 const advanceScene = () => {
 	// moves forward in date array every time we advance
 	sceneIndex++;
 
+	console.log(dateChosen[sceneIndex])
+	console.log(dateScore)
+
 	// put an if statement here to add +1 to index if swoon not acheieved (skips it)
+	if (dateChosen[sceneIndex].type === "swoon") {
+		if (swoonLevel < 5) {
+			sceneIndex++;
+		} else {
+			switch (dateScore) {
+				case 100:
+					storyPrompt.innerText = dateChosen[sceneIndex].mild;
+					break;
+				case 800:
+					storyPrompt.innerText = dateChosen[sceneIndex].hot;
+					break;
+				case 1000:
+					storyPrompt.innerText = dateChosen[sceneIndex].spicy;
+					break;
+			}
+		}
+	}
 
 	// displays dynamic text depending on scene type
 	if (dateChosen[sceneIndex].type === "resolve") {
@@ -559,13 +593,28 @@ const advanceScene = () => {
 
 		// if end of date, points are tallied for dynamic text
 	} else if (dateChosen[sceneIndex].type === "end") {
-		// will make this dynamic, but placeholder for now
-		storyPrompt.innerText = dateChosen[sceneIndex].text;
-
-		// uses dateScore to
-
-		// if not a resolve or end screen, text is not dynamic
-	} else {
+		// sets up reset function
+		storyButton1.addEventListener("click", pageReload);
+		storyButton1.innerText = "Restart app?"
+		// displays dynamic ending based on final score
+		switch (dateScore) {
+			case 100:
+				storyPrompt.innerText = dateChosen[sceneIndex].bad;
+				console.log(dateScore);
+				break;
+			case 800:
+				storyPrompt.innerText = dateChosen[sceneIndex].med;
+				console.log(dateScore);
+				break;
+			case 1000:
+				storyPrompt.innerText = dateChosen[sceneIndex].good;
+				console.log(dateScore);
+				break;
+		}
+	} else if (
+		dateChosen[sceneIndex].type === "intro" ||
+		dateChosen[sceneIndex].type === "event"
+	) {
 		storyPrompt.innerText = dateChosen[sceneIndex].text;
 	}
 
