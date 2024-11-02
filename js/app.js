@@ -226,7 +226,7 @@ const movieDate = [
 	{
 		type: "end",
 		bad: '"Thanks for the movie," your date says. Unsure how to cap off the night, they offer you a polite handshake. You return it and the two of you walk in separate directions back the way you came. Nothing ventured, nothing gained, huh? At least it was a good movie.\n\nTough luck! You didn\'t earn a second date this time. But, you can always try again! Thanks for playing Swoon!',
-		med: '"Thanks for a fun night," your date says with a slight yawn. "Looking forward to the next one!" They wander off, leaving you with butterflies in your stomach."Next time you pick the movie!" you shout after them. They nod playfully and head home.\n\nCongratulations! You\'ve earned a second date. Thanks for playing Swoon!',
+		med: '"Thanks for a fun night," your date says with a slight yawn. "Looking forward to the next one!" They wander off, leaving you with butterflies in your stomach. "Next time you pick the movie!" you shout after them. They nod playfully and head home.\n\nCongratulations! You\'ve earned a second date. Thanks for playing Swoon!',
 		good: '"This was a wonderful night..." your date says, trailing off. Their eyes wander down your body. There is a tension in the air that you could cut with a knife. You take a step to close the distance between you.\n\n"Who says it has to end...?" you ask. They smile devilishly and beckon you to follow them home.\n\nCongratulations! You\'ve earned a second date. And it looks like this one isn\'t over. Go get \'em, tiger! Thanks for playing Swoon!',
 		choices: false,
 	},
@@ -401,7 +401,7 @@ const scoreDice = () => {
 			faceCount[2].count += 1;
 		} else if (die.src.includes("heart")) {
 			addHeart(swoonMeter, swoonLevel);
-			dateScore += 25;
+			dateScore += 40;
 		}
 	}
 
@@ -529,16 +529,13 @@ const startDate = (event) => {
 
 // page reloading function, since we're not storing data right now
 const pageReload = () => {
-	location.reload()
-}
-
+	location.reload();
+};
 
 // function to advance the scene
 const advanceScene = () => {
 	// moves forward in date array every time we advance
 	sceneIndex++;
-
-	console.log(dateChosen[sceneIndex])
 	console.log(dateScore)
 
 	// put an if statement here to add +1 to index if swoon not acheieved (skips it)
@@ -546,16 +543,12 @@ const advanceScene = () => {
 		if (swoonLevel < 5) {
 			sceneIndex++;
 		} else {
-			switch (dateScore) {
-				case 100:
-					storyPrompt.innerText = dateChosen[sceneIndex].mild;
-					break;
-				case 800:
-					storyPrompt.innerText = dateChosen[sceneIndex].hot;
-					break;
-				case 1000:
-					storyPrompt.innerText = dateChosen[sceneIndex].spicy;
-					break;
+			if (dateScore >= 1000) {
+				storyPrompt.innerText = dateChosen[sceneIndex].spicy;
+			} else if (dateScore >= 800) {
+				storyPrompt.innerText = dateChosen[sceneIndex].hot;
+			} else {
+				storyPrompt.innerText = dateChosen[sceneIndex].mild;
 			}
 		}
 	}
@@ -595,21 +588,14 @@ const advanceScene = () => {
 	} else if (dateChosen[sceneIndex].type === "end") {
 		// sets up reset function
 		storyButton1.addEventListener("click", pageReload);
-		storyButton1.innerText = "Restart app?"
+		storyButton1.innerText = "Restart app?";
 		// displays dynamic ending based on final score
-		switch (dateScore) {
-			case 100:
-				storyPrompt.innerText = dateChosen[sceneIndex].bad;
-				console.log(dateScore);
-				break;
-			case 800:
-				storyPrompt.innerText = dateChosen[sceneIndex].med;
-				console.log(dateScore);
-				break;
-			case 1000:
-				storyPrompt.innerText = dateChosen[sceneIndex].good;
-				console.log(dateScore);
-				break;
+		if (dateScore >= 1000) {
+			storyPrompt.innerText = dateChosen[sceneIndex].good;
+		} else if (dateScore >= 8000) {
+			storyPrompt.innerText = dateChosen[sceneIndex].med;
+		} else {
+			storyPrompt.innerText = dateChosen[sceneIndex].bad;
 		}
 	} else if (
 		dateChosen[sceneIndex].type === "intro" ||
