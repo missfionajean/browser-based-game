@@ -391,7 +391,7 @@ const scoreDice = () => {
 		{ choice: "sweet", count: 0 },
 	];
 
-	// iterates through dice and banks the count in faceCount
+	// iterates through dice and banks the count in faceCount obj
 	for (die of allDice) {
 		if (die.src.includes("laugh")) {
 			faceCount[0].count += 1;
@@ -405,7 +405,7 @@ const scoreDice = () => {
 		}
 	}
 
-	// grabs the max value and finds banks number/choice
+	// grabs the max value and finds + banks number/choice
 	let maxFace = 0;
 	for (face of faceCount) {
 		if (face.count > maxFace) {
@@ -414,12 +414,12 @@ const scoreDice = () => {
 		}
 	}
 
-	// calculate score of final roll and updates total score
+	// calculates total score of event and updates total score
 	let eventScore = maxFace * 100;
 	dateScore += eventScore;
 	moodTracker += eventScore;
 
-	// uses switch trickle-down to set date opinion based on score
+	// uses switch trickle-down to set dateOpinion based on score
 	switch (eventScore) {
 		case 100:
 			dateOpinion = "bad";
