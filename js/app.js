@@ -495,7 +495,7 @@ const getMatched = () => {
 
 	// removes previous function from button and shows all three
 	storyButton1.removeEventListener("click", getMatched);
-	showStoryButtons(3);
+	showStoryButtons(1);
 
 	// set button text to match available date options
 	// the choice can matter later, but focus on movie for now
