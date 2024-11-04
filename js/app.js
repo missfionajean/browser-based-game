@@ -151,9 +151,9 @@ let moodTracker = 0;
 /* ----------------------- Date Events ----------------------- */
 /* ----------------------------------------------------------- */
 
-// this is where the HTML/text for the date flow(s) will go.
+// arrays of objects that hold date events (iterated through w/ advanceScene)
 
-// array of objects for movie date, to be used by advance
+// uses object properties to dynamically capture + apply text to game window
 const movieDate = [
 	{
 		type: "intro",
@@ -624,8 +624,8 @@ const advanceScene = () => {
 /* ------- Un-Nested Event Listeners & Called Functions ------ */
 /* ----------------------------------------------------------- */
 
-// event listeners for action window
+// event listener practice die rolling in action window
 rollButton.addEventListener("click", rollDice);
 
-// event listener for starting date
+// event listener for starting game (i.e. pressing "next" on main menu)
 storyButton1.addEventListener("click", getMatched);
