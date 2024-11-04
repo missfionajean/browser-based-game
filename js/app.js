@@ -219,7 +219,7 @@ const movieDate = [
 	{
 		type: "swoon",
 		mild: "Your Swoon-O-Meter is full!\n\nYou shuffle slightly, unsure how to say goodbye. You feel like the date went well enough, but you're wondering if there's truly a spark. Your eyes wander over to find your date apparently locked in the same thought. They take a hesitant step toward you and place their hands on your waist. You both lean in slowly until your lips brush, sending a shiver through your body. They kiss you gently until their phone alarm goes off.\n\n\"Gotta get home and feed the dogs.\" they say. They offer you a small smile as they step away.",
-		hot: 'Your Swoon-O-Meter is full!\n\nYou yawn and stretch, shaking off the stiffness of sitting for two hours. You turn to find your date watching you. "It was a good movie," they say. You take an unconscious step closer until you\'re less than a foot away. Your date closes the gap and finds your lips with theirs. You explore each other\'s mouths thoroughly, bodies pressing tighter against each other. The moment is finally interrupted by the chime of a phone alarm.\n\n"Gotta get home and feed the dogs." they say. They offer you a warm smile and linger slightly before separating their body from yours.',
+		hot: 'Your Swoon-O-Meter is full!\n\nYou yawn and stretch, shaking off the stiffness of sitting for two hours. You turn to find your date watching you. "It was a good movie," they say. You take an unconscious step closer until you\'re less than a foot away. Your date closes the gap and finds your lips with theirs. You perform a cursory exploration each other\'s mouths, bodies pressing against each other. The moment is finally interrupted by the chime of a phone alarm.\n\n"Gotta get home and feed the dogs." they say. They offer you a warm smile and linger slightly before separating their body from yours.',
 		spicy: "Your Swoon-O-Meter is full!\n\nIt doesn't take long at all for your date's hands to find your body out on the sidewalk. It's clear that the heat you felt between the two of you wasn't just one-sided! Within seconds, your hands are desperately pulling them closer. Their fingertips dig into your hips and you sink deeply into the kiss. Time slips by in a haze, until you are snapped back to reality by the ringing of a phone alarm.\n\n\"Gotta get home and feed the dogs.\" they say. However, they don't move from your embrace. Their eyes stay locked on yours for an impossibly long moment before they finally take a step back.",
 		choices: false,
 	},
@@ -592,7 +592,7 @@ const advanceScene = () => {
 		// displays dynamic ending based on final score
 		if (dateScore >= 1000) {
 			storyPrompt.innerText = dateChosen[sceneIndex].good;
-		} else if (dateScore >= 8000) {
+		} else if (dateScore >= 800) {
 			storyPrompt.innerText = dateChosen[sceneIndex].med;
 		} else {
 			storyPrompt.innerText = dateChosen[sceneIndex].bad;
